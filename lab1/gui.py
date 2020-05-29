@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import impl
 
-class TaskParametersGroup(QtWidgets.QGroupBox):
+class TestTaskParametersGroup(QtWidgets.QGroupBox):
 
     n = None
     m = None
@@ -91,6 +91,142 @@ class TaskParametersGroup(QtWidgets.QGroupBox):
         if self.eps <= 0:
             raise ValueError("Параметр eps должен быть больше 0")
         if self.n_max <= 0:
+            raise ValueError("Параметр N_max должен быть больше 0")
+
+    def __button_clicked(self):
+        try:
+            self.__parse_values()
+            self.__check_correct()
+        except Exception as error:
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage(str(Exception))
+
+class MainTaskParametersGroup(QtWidgets.QGroupBox):
+
+    n = None
+    m = None
+    w = None
+    w2 = None
+    eps = None
+    eps2 = None
+    n_max = None
+    n_max2 = None
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setTitle("Параметры для численного решения")
+        self.__grid = QtWidgets.QGridLayout(self)
+        self.__n_parameter()
+        self.__m_parameter()
+        self.__w_parameter()
+        self.__eps_parameter()
+        self.__n_max_parameter()
+        self.__w2_parameter()
+        self.__eps2_parameter()
+        self.__n_max2_parameter()
+        self.__apply_button()
+        self.__parse_values()
+
+    def __n_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Размерность сетки по x")
+        self.__n_input = QtWidgets.QLineEdit()
+        self.__n_input.setText("10")
+        self.__grid.addWidget(label, 0, 0)
+        self.__grid.addWidget(self.__n_input, 0, 1)
+
+    def __m_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Размерность сетки по y")
+        self.__m_input = QtWidgets.QLineEdit()
+        self.__m_input.setText("10")
+        self.__grid.addWidget(label, 1, 0)
+        self.__grid.addWidget(self.__m_input, 1, 1)
+
+    def __w_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Параметр метода w")
+        self.__w_input = QtWidgets.QLineEdit()
+        self.__w_input.setText("1")
+        self.__grid.addWidget(label, 2, 0)
+        self.__grid.addWidget(self.__w_input, 2, 1)
+
+    def __eps_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Минимальная точность")
+        self.__eps_input = QtWidgets.QLineEdit()
+        self.__eps_input.setText("0.0000005")
+        self.__grid.addWidget(label, 3, 0)
+        self.__grid.addWidget(self.__eps_input, 3, 1)
+
+    def __n_max_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Максимальное количество итераций")
+        self.__n_max_input = QtWidgets.QLineEdit()
+        self.__n_max_input.setText("500")
+        self.__grid.addWidget(label, 4, 0)
+        self.__grid.addWidget(self.__n_max_input, 4, 1)
+
+    def __w2_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Параметр метода w (для сгущенной сетки)")
+        self.__w2_input = QtWidgets.QLineEdit()
+        self.__w2_input.setText("1")
+        self.__grid.addWidget(label, 5, 0)
+        self.__grid.addWidget(self.__w2_input, 5, 1)
+
+    def __eps2_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Минимальная точность (для сгущенной сетки)")
+        self.__eps2_input = QtWidgets.QLineEdit()
+        self.__eps2_input.setText("0.0000005")
+        self.__grid.addWidget(label, 6, 0)
+        self.__grid.addWidget(self.__eps2_input, 6, 1)
+
+    def __n_max2_parameter(self):
+        label = QtWidgets.QLabel()
+        label.setText("Максимальное количество итераций (для сгущенной сетки)")
+        self.__n_max2_input = QtWidgets.QLineEdit()
+        self.__n_max2_input.setText("500")
+        self.__grid.addWidget(label, 7, 0)
+        self.__grid.addWidget(self.__n_max2_input, 7, 1)
+
+    def __apply_button(self):
+        button = QtWidgets.QPushButton()
+        button.setText("Ввести параметры")
+        button.clicked.connect(self.__button_clicked)
+        self.__grid.addWidget(button, 8, 0, 1, 2)
+
+    def __parse_values(self):
+        self.n = int(self.__n_input.text())
+        self.m = int(self.__m_input.text())
+        self.w = self.__w_input.text()
+        self.w2 = self.__w2_input.text()
+        if self.w:
+            self.w = float(self.w)
+        else:
+            l = 2 * ((np.arcsin(np.pi / (2 * self.n))) ** 2)
+            self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
+        if self.w2:
+            self.w2 = float(self.w2)
+        else:
+            l = 2 * ((np.arcsin(np.pi / (4 * self.n))) ** 2)
+            self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
+        self.eps = float(self.__eps_input.text())
+        self.eps2 = float(self.__eps2_input.text())
+        self.n_max = int(self.__n_max_input.text())
+        self.n_max2 = int(self.__n_max2_input.text())
+
+    def __check_correct(self):
+        if self.n <= 0:
+            raise ValueError("Параметр n должен быть больше 0")
+        if self.m <= 0:
+            raise ValueError("Параметр m должен быть больше 0")
+        if not (0 < self.w < 2) or not (0 < self.w2 < 2):
+            raise ValueError("Параметр w должен быть больше 0 и меньше 2")
+        if self.eps <= 0 or self.eps2 <= 0:
+            raise ValueError("Параметр eps должен быть больше 0")
+        if self.n_max <= 0 or self.n_max2 <= 0:
             raise ValueError("Параметр N_max должен быть больше 0")
 
     def __button_clicked(self):
@@ -308,7 +444,7 @@ class TestTab(QtWidgets.QWidget):
         self.__info()
 
     def __parameters(self):
-        self.__task_parameters = TaskParametersGroup()
+        self.__task_parameters = TestTaskParametersGroup()
         self.__grid.addWidget(self.__task_parameters, 0, 0, 1, 1)
 
     def __start_button(self):
@@ -375,7 +511,7 @@ class MainTab(QtWidgets.QWidget):
         self.__info()
 
     def __parameters(self):
-        self.__task_parameters = TaskParametersGroup()
+        self.__task_parameters = MainTaskParametersGroup()
         self.__grid.addWidget(self.__task_parameters, 0, 0, 1, 1)
 
     def __start_button(self):
@@ -396,8 +532,12 @@ class MainTab(QtWidgets.QWidget):
     def __button_clicked(self):
         n, m = self.__task_parameters.n, self.__task_parameters.m
         w = self.__task_parameters.w
-        eps = self.__task_parameters.eps
+        w2 = self.__task_parameters.w2
+        min_eps = self.__task_parameters.eps
+        min_eps2 = self.__task_parameters.eps2
         n_max = self.__task_parameters.n_max
+        n_max2 = self.__task_parameters.n_max2
+
 
         #init
         main_task = impl.main_task(n=n, m=m)
@@ -410,7 +550,7 @@ class MainTab(QtWidgets.QWidget):
         solver.n, solver.m = n, m
         solver.h, solver.k = h, k
         solver.w = w
-        solver.eps = eps
+        solver.eps = min_eps
         solver.n_max = n_max
 
         v1, eps1, iter1 = solver.solve(v.copy(), f)
@@ -426,9 +566,9 @@ class MainTab(QtWidgets.QWidget):
         solver = impl.solver()
         solver.n, solver.m = 2*n, 2*m
         solver.h, solver.k = h, k
-        solver.w = w
-        solver.eps = eps
-        solver.n_max = n_max
+        solver.w = w2
+        solver.eps = min_eps2
+        solver.n_max = n_max2
 
         v2, eps2, iter2 = solver.solve(v.copy(), f)
         rn2 = solver.calculate_rn(v2, f)
@@ -441,8 +581,8 @@ class MainTab(QtWidgets.QWidget):
                 if v3[maxi][maxj] < v3[i][j]:
                     maxi, maxj = i, j
 
-        self.__info.info(n=n, m=m, w1=w, w2=w, min_eps1=eps, min_eps2=eps, 
-                         n_max1=n_max, n_max2=n_max, niter1=iter1, niter2=iter2, 
+        self.__info.info(n=n, m=m, w1=w, w2=w2, min_eps1=min_eps, min_eps2=min_eps2, 
+                         n_max1=n_max, n_max2=n_max2, niter1=iter1, niter2=iter2, 
                          eps1=eps1, eps2=eps2, eps=v3[maxi][maxj], x=maxi, y=maxj,
                          rn1=rn1, rn2=rn2)
 
