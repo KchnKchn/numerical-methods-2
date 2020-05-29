@@ -1,5 +1,4 @@
 from PyQt5 import QtWidgets, QtGui, QtCore
-import matplotlib.pyplot as plt
 import numpy as np
 import impl
 
