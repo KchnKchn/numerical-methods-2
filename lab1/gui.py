@@ -204,13 +204,15 @@ class MainTaskParametersGroup(QtWidgets.QGroupBox):
         if self.w:
             self.w = float(self.w)
         else:
-            l = 2 * ((np.arcsin(np.pi / (2 * self.n))) ** 2)
-            self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
+            #l = 2 * ((np.arcsin(np.pi / (2 * self.n))) ** 2)
+            #self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
+            self.w = 0
         if self.w2:
             self.w2 = float(self.w2)
         else:
-            l = 2 * ((np.arcsin(np.pi / (4 * self.n))) ** 2)
-            self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
+            #l = 2 * ((np.arcsin(np.pi / (4 * self.n))) ** 2)
+            #self.w2 = 2 / (1 + (l * (2 - l)) ** 0.5)
+            self.w2 = 0
         self.eps = float(self.__eps_input.text())
         self.eps2 = float(self.__eps2_input.text())
         self.n_max = int(self.__n_max_input.text())
@@ -493,7 +495,7 @@ class TestTab(QtWidgets.QWidget):
                 if uv[maxi][maxj] < uv[i][j]:
                     maxi, maxj = i, j
         
-
+        w = solver.w
         self.__info.info(n=n, m=m, w=w, min_eps=eps, n_max=n_max, 
                          niter=iter1, eps1=eps1, eps=uv[maxi][maxj],
                          x=maxi, y=maxj, rn=rn1)
@@ -555,6 +557,7 @@ class MainTab(QtWidgets.QWidget):
         v1, eps1, iter1 = solver.solve(v.copy(), f)
         rn1 = solver.calculate_rn(v1, f)
 
+        w = solver.w
         #init
         main_task2 = impl.main_task(2*n, 2*m)
         h, k = main_task2.get_h_k()
@@ -572,6 +575,7 @@ class MainTab(QtWidgets.QWidget):
         v2, eps2, iter2 = solver.solve(v.copy(), f)
         rn2 = solver.calculate_rn(v2, f)
 
+        w2 = solver.w
         v3 = np.zeros(shape=(n+1,m+1), dtype=np.float)
         maxi, maxj = 0, 0
         for j in range(m+1):
