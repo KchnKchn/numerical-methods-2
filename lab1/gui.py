@@ -79,26 +79,9 @@ class TestTaskParametersGroup(QtWidgets.QGroupBox):
             self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
         self.eps = float(self.__eps_input.text())
         self.n_max = int(self.__n_max_input.text())
-        
-    def __check_correct(self):
-        if self.n <= 0:
-            raise ValueError("Параметр n должен быть больше 0")
-        if self.m <= 0:
-            raise ValueError("Параметр m должен быть больше 0")
-        if not (0 < self.w < 2):
-            raise ValueError("Параметр w должен быть больше 0 и меньше 2")
-        if self.eps <= 0:
-            raise ValueError("Параметр eps должен быть больше 0")
-        if self.n_max <= 0:
-            raise ValueError("Параметр N_max должен быть больше 0")
 
     def __button_clicked(self):
-        try:
-            self.__parse_values()
-            self.__check_correct()
-        except Exception as error:
-            error_dialog = QtWidgets.QErrorMessage()
-            error_dialog.showMessage(str(Exception))
+        self.__parse_values()
 
 class MainTaskParametersGroup(QtWidgets.QGroupBox):
 
@@ -204,39 +187,18 @@ class MainTaskParametersGroup(QtWidgets.QGroupBox):
         if self.w:
             self.w = float(self.w)
         else:
-            #l = 2 * ((np.arcsin(np.pi / (2 * self.n))) ** 2)
-            #self.w = 2 / (1 + (l * (2 - l)) ** 0.5)
             self.w = 0
         if self.w2:
             self.w2 = float(self.w2)
         else:
-            #l = 2 * ((np.arcsin(np.pi / (4 * self.n))) ** 2)
-            #self.w2 = 2 / (1 + (l * (2 - l)) ** 0.5)
             self.w2 = 0
         self.eps = float(self.__eps_input.text())
         self.eps2 = float(self.__eps2_input.text())
         self.n_max = int(self.__n_max_input.text())
         self.n_max2 = int(self.__n_max2_input.text())
 
-    def __check_correct(self):
-        if self.n <= 0:
-            raise ValueError("Параметр n должен быть больше 0")
-        if self.m <= 0:
-            raise ValueError("Параметр m должен быть больше 0")
-        if not (0 < self.w < 2) or not (0 < self.w2 < 2):
-            raise ValueError("Параметр w должен быть больше 0 и меньше 2")
-        if self.eps <= 0 or self.eps2 <= 0:
-            raise ValueError("Параметр eps должен быть больше 0")
-        if self.n_max <= 0 or self.n_max2 <= 0:
-            raise ValueError("Параметр N_max должен быть больше 0")
-
     def __button_clicked(self):
-        try:
-            self.__parse_values()
-            self.__check_correct()
-        except Exception as error:
-            error_dialog = QtWidgets.QErrorMessage()
-            error_dialog.showMessage(str(Exception))
+        self.__parse_values()
 
 class ResultTable(QtWidgets.QTableWidget):
     def __init__(self, parent=None):

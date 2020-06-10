@@ -105,6 +105,14 @@ class solver:
         iter = 0
         eps = 0
 
+        if self.w == 0:
+            arg1 = np.pi * self.h / 2
+            arg2 = np.pi * self.k / 2
+            aa = self.h**2 + self.k**2
+            l = 2*(self.k**2)/aa * np.sin(arg1)*np.sin(arg1) + \
+                2*(self.h**2)/aa * np.sin(arg2)*np.sin(arg2)
+            self.w = 2 / (1 + np.sqrt(l * (2 - l)))
+
         while(not finish):
             eps = 0
             for j in range(1, self.m):
