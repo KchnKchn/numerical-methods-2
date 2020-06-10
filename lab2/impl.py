@@ -150,13 +150,13 @@ class c_task(task):
     sa, sb = 0, 0
 
     def _F(self, x: float):
-        result = np.cos(x) / (1 + x**2) + np.cos(10)
+        result = np.cos(x) / (1 + x**2) + np.cos(10*x)
         return result
 
     def _F1(self, x: float):
-        result = -2*x*np.cos(x)/((1 + x**2)**2)-np.sin(x)/(1 + x**2)
+        result = -2*x*np.cos(x)/((1 + x**2)**2)-np.sin(x)/(1 + x**2) - 10*np.sin(10*x)
         return result
 
     def _F2(self, x: float):
-        result = 8*(x**2)*np.cos(x)/((1 + x**2)**3)+4*x*np.sin(x)/((1 + x**2)**2)-np.cos(x) / (1 + x**2)-2*np.cos(x)/((1 + x**2)**2)
+        result = 8*(x**2)*np.cos(x)/((1 + x**2)**3)+4*x*np.sin(x)/((1 + x**2)**2)-np.cos(x) / (1 + x**2)-2*np.cos(x)/((1 + x**2)**2) - 100*np.cos(10*x)
         return result
